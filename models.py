@@ -20,6 +20,7 @@ class Authentication:
         return generated_key
 
     def signup(self, username, password):
+        username = username.lower()
         if Authentication().is_username_unique(username) is False:
             return {"logged_in": False}
         hashed_password = General().sha256_hash(password)
@@ -27,6 +28,7 @@ class Authentication:
         return {"logged_in": True, "api_key": api_key}
 
     def login(self, username, password):
+        username = username.lower()
         hashed_password = General().sha256_hash(password)
         user_data = Database().get_user_data_with_username(username)
         if not is_none(user_data) and user_data["password"] == hashed_password:
@@ -35,6 +37,7 @@ class Authentication:
         return {"logged_in": False}
 
     def is_username_unique(self, username):
+        username = username.lower()
         user_data = Database().get_user_data_with_username(username)
         if is_none(user_data):
             return {"is_it_unique": True}
