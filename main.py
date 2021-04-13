@@ -3,6 +3,7 @@ from models import Authentication
 
 # importing views
 from views.api.auth import auth
+from views.api.user import user
 
 app = Flask(__name__)
 
@@ -16,3 +17,4 @@ app.before_request(fix_extra_slash_at_the_end_of_the_url)
 # registering blueprints
 
 app.register_blueprint(auth, url_prefix='/api/')
+app.register_blueprint(user, url_prefix='/api/user/')
