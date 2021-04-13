@@ -10,7 +10,7 @@ def is_api_key_valid(func):
         api_key = request.form.get("api_key")
         if Authentication().is_api_key_valid(api_key) is False:
             abort(401)
-        func(*args, **kwargs)
+        return func(*args, **kwargs)
     return is_api_key_valid_
 
 @is_api_key_valid
