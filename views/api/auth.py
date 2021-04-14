@@ -12,6 +12,12 @@ def signup():
     signup_answer = Authentication().signup(username, password)
     return signup_answer
     
+@auth.route("/login", methods = ['POST'])
+def signin():
+    username = request.form.get("username")
+    password = request.form.get("password")
+    signin_answer = Authentication().login(username, password)
+    return signin_answer
 
 @auth.route("/is_username_unique", methods = ['POST'])
 def is_username_unique():
