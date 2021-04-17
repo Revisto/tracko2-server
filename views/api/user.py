@@ -42,3 +42,12 @@ def move_series():
     from_shelf = request.form.get("from_shelf")
     to_shelf = request.form.get("to_shelf")
     return User().move_series_to_shelf(api_key, series_name, from_shelf, to_shelf)
+
+@is_api_key_valid
+@user.route("/update/series", methods = ['POST'])
+def update_series():
+    api_key = request.form.get("api_key")
+    series_name = request.form.get("series_name")
+    shelf = request.form.get("shelf")
+    watched_till = request.form.get("watched_till")
+    return User().update_series(api_key, series_name, shelf, watched_till)

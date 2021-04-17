@@ -1,7 +1,7 @@
 import hashlib
 import pymongo
 from datetime import datetime
-from validator_collection import is_none
+from validator_collection import is_none, is_numeric
 import secrets
 
 
@@ -72,6 +72,28 @@ class User:
         Database().update_user_shelves(api_key, all_shelves)
         return {"status": True}
         
+    def update_series(self, api_key, series_name, shelf_name, watched_till):
+        watched_till_split = watched_till.split(":")
+        all_shelves = Database().get_all_shelves(api_key)
+        last_watched_till = all_shelves[shelf_name][series_name]["watched-till"]
+        last_watched_till_split = last_watched_till.split(":")
+
+        if len(watched_till_split) != 4:
+            return {"status": False}
+        for index in range (len(watched_till_split)):
+            value = watched_till_split[index]
+            if is_numeric(value) is False and value != "":
+                return {"status": False}
+            if value == "":
+                watched_till_split[index] = last_watched_till_split[index]
+
+        if shelf_name not in all_shelves or series_name not in all_shelves[shelf_name]:
+            return {"status": False}
+        
+        all_shelves[shelf_name][series_name]["watched-till"] = ":".join(watched_till_split)
+        Database().update_user_shelves(api_key, all_shelves)
+        return {"status": True}
+
 class Database:
     def __init__(self):
         self.database = pymongo.MongoClient()["tracko"]
