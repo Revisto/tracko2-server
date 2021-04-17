@@ -24,3 +24,11 @@ def shelves():
 def specific_shelf(shelf_name):
     api_key = request.form.get("api_key")
     return User().get_specific_shelf(api_key, shelf_name)
+
+@is_api_key_valid
+@user.route("/add/series", methods = ['POST'])
+def add_series():
+    api_key = request.form.get("api_key")
+    series_name = request.form.get("series_name")
+    shelf_name = request.form.get("shelf_name")
+    return User().add_series_to_shelf(api_key, shelf_name, series_name)

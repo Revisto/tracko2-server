@@ -56,6 +56,12 @@ class User:
             return all_shelves[shelf_name]
         return {}
 
+    def add_series_to_shelf(self, api_key, shelf_name, series_name):
+        result = Database().add_series_to_shelf(api_key, shelf_name, series_name)
+        if result is False:
+            return {"status": False}
+        return {"status": True}
+        
 class Database:
     def __init__(self):
         self.database = pymongo.MongoClient()["tracko"]
@@ -67,10 +73,19 @@ class Database:
                 "username": username,
                 "password": hashed_password,
                 "api_key": api_key,
-                "shelves": dict(),
+                "shelves": {"want-to-watch":{}, "currently-watching":{}, "watched":{}},
             }
         )
         return {"api_key": api_key}
+
+    def add_series_to_shelf(self, api_key, shelf_name, series_name):
+        user_query = {"api_key": api_key}
+        shelves = self.database.users.find_one(user_query)["shelves"]
+        if shelf_name in shelves and series_name not in shelves[shelf_name]:
+            shelves[shelf_name][series_name] = {"watched-till": "01:01:00:00"}
+            self.database.users.update_one(user_query, {"$set":{"shelves": shelves}})
+            return True
+        return False
 
     def get_user_data_with_username(self, username):
         return self.database.users.find_one({"username": username})
