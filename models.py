@@ -61,6 +61,16 @@ class User:
         if result is False:
             return {"status": False}
         return {"status": True}
+
+    def move_series_to_shelf(self, api_key, series_name, from_shelf, to_shelf):
+        all_shelves = Database().get_all_shelves(api_key)
+        if from_shelf not in all_shelves or to_shelf not in all_shelves or series_name not in all_shelves[from_shelf]:
+            return {"status": False}
+        series_data = all_shelves[from_shelf][series_name]
+        all_shelves[from_shelf].pop(series_name)
+        all_shelves[to_shelf][series_name] = series_data
+        Database().update_user_shelves(api_key, all_shelves)
+        return {"status": True}
         
 class Database:
     def __init__(self):
@@ -95,3 +105,8 @@ class Database:
 
     def get_all_shelves(self, api_key):
         return self.database.users.find_one({"api_key": api_key})["shelves"]
+
+    def update_user_shelves(self, api_key, shelves):
+        user_query = {"api_key": api_key}
+        self.database.users.update_one(user_query, {"$set":{"shelves": shelves}})
+        return True

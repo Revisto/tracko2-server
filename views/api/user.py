@@ -32,3 +32,13 @@ def add_series():
     series_name = request.form.get("series_name")
     shelf_name = request.form.get("shelf_name")
     return User().add_series_to_shelf(api_key, shelf_name, series_name)
+
+
+@is_api_key_valid
+@user.route("/move/series", methods = ['POST'])
+def move_series():
+    api_key = request.form.get("api_key")
+    series_name = request.form.get("series_name")
+    from_shelf = request.form.get("from_shelf")
+    to_shelf = request.form.get("to_shelf")
+    return User().move_series_to_shelf(api_key, series_name, from_shelf, to_shelf)
