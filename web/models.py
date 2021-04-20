@@ -3,7 +3,7 @@ import pymongo
 from datetime import datetime
 from validator_collection import is_none, is_numeric
 import secrets
-
+from setting import mongodb_URI
 
 class General:
     def sha256_hash(self, password):
@@ -96,7 +96,7 @@ class User:
 
 class Database:
     def __init__(self):
-        self.database = pymongo.MongoClient()["tracko"]
+        self.database = pymongo.MongoClient(mongodb_URI)["tracko"]
 
     def add_user(self, username, hashed_password):
         api_key = Authentication().generate_api_key()

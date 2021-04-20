@@ -1,3 +1,3 @@
 from main import app
 if __name__ == "__main__":
-    app.run(debug=True,port=1287)
+    app.run(debug=True,port=8080)

@@ -1,0 +1,6 @@
+flask
+validator_collection
+pymongo
+gunicorn
+python-dotenv
+requests
