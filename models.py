@@ -46,8 +46,8 @@ class Authentication:
     def is_api_key_valid(self, api_key):
         user_data = Database().get_user_data_with_api_key(api_key)
         if is_none(user_data):
-            return True
-        return False
+            return False
+        return True
 
 class User:
     def get_specific_shelf(self, api_key, shelf_name):
